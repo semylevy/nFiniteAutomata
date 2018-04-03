@@ -7,7 +7,7 @@
 using namespace std;
 
 unordered_map<string, unordered_multimap<string, string> > automata;
-vector<string> states; vector<string> alphabet; string initialState; vector<string> finalStates;
+vector<string> states; vector<string> alphabet; string startState; vector<string> finalStates;
 
 //Reading line string to vector
 vector<string> readToVector(string line) {
@@ -35,25 +35,31 @@ vector<string> readToVector(string line) {
     }
     return myVec;
 }
-// Puts state transitions into matrix
-void fillDataMatrix() {
-    // For every state in the machine
-    int numStates = int(states.size()) ;
-    int lines = 2;
-    for(int i = 0; i < numStates; i++) {
-        string state;
-        state = states[i];
-        unordered_multimap<string, string> empty;
-        automata.emplace(state, empty);
+
+void readTransition(string line){
+    int i = 0;
+    string initialState, symbol, nextState;
+    while(line[i] != ','){
+        initialState = initialState + line[i];
+        i++;
     }
-    // For every transition function
-    for(int i = 0; i < lines; i++) {
-        string initialState, symbol, nextState;
-        unordered_multimap<string, string> current = automata[initialState];
-        current.emplace(symbol, nextState);
-        automata[initialState] = current;
+    i++;
+    while(line[i] != ':'){
+        symbol = symbol + line[i];
+        i++;
     }
+    i++;
+    while(line[i]){
+        nextState = nextState + line[i];
+        i++;
+    }
+    unordered_multimap<string, string> current = automata[initialState];
+    current.emplace(symbol, nextState);
+    automata[initialState] = current;
+
 }
+// Puts state transitions into matrix
+
 
 bool isFinal(string state) {
     return true;
@@ -97,10 +103,11 @@ int main() {
     alphabet = readToVector(secondLine);
     finalStates = readToVector(fourthLine);
     if(myReadFile.is_open()){
-        while(!myRead)
+        while(getline(myReadFile,nextLine)){
+            
+        }
     }
 
-    fillDataMatrix();
     if(traverse("ab", 0, "q0")) {
         cout << "true";
     }
