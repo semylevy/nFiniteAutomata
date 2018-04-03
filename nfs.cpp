@@ -2,38 +2,35 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <unordered_set>
 #include <fstream>
 
 using namespace std;
 
 unordered_map<string, unordered_multimap<string, string> > automata;
-vector<string> states; vector<string> alphabet; string initialState; vector<string> finalStates;
+string initialState;
+unordered_set<string> finalStates;
 
-//Reading line string to vector
-vector<string> readToVector(string line) {
-    vector<string> myVec;
+//Reading line string to vector, type 0 is states, type 1 is final states
+void readToMap(string line, int type) {
     int i = 0;
-    string thing;
+    string current;
     while(line[i]) {
-        if(line[i] == ',') {
-            unordered_multimap<string, string> empty;
-            automata.emplace(thing, empty);
-            //myVec.push_back(thing);
-            thing = "";
+        if(line[i] == ',' || line[i+1] == NULL) {
+            if(type == 0) { // If filling out states
+                unordered_multimap<string, string> empty;
+                automata.emplace(current, empty);
+            } else if (type == 1) { // If filling out final states
+                finalStates.emplace(current);
+            }
+            current = "";
             i++;
         }
         else {
-            thing = thing + line[i];
-            if(line[i+1] == NULL) {
-                unordered_multimap<string, string> empty;
-                automata.emplace(thing, empty);
-                //myVec.push_back(thing);
-                thing = "";
-            }
+            current = current + line[i];
             i++;
         }
     }
-    return myVec;
 }
 // Puts state transitions into matrix
 void fillDataMatrix() {
@@ -93,14 +90,12 @@ int main() {
         myReadFile >> thirdLine;
         myReadFile >> fourthLine;
     }
-    states = readToVector(firstLine);
-    alphabet = readToVector(secondLine);
-    finalStates = readToVector(fourthLine);
+    readToMap(firstLine, 0);
+    readToMap(fourthLine, 1);
     if(myReadFile.is_open()){
         while(!myRead)
     }
 
-    fillDataMatrix();
     if(traverse("ab", 0, "q0")) {
         cout << "true";
     }
