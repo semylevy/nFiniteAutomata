@@ -10,9 +10,11 @@ using namespace std;
 unordered_map<string, unordered_multimap<string, string> > automata;
 string initialState;
 unordered_set<string> finalStates;
+unordered_set<string> visitedEpsilonSets;
 
 //Reading line string to vector, type 0 is states, type 1 is final states
 void readToMap(string line, int type) {
+    if(line == "") return;
     int i = 0;
     string current;
     while(line[i] || line[i-1]) {
@@ -34,6 +36,7 @@ void readToMap(string line, int type) {
 }
 
 void readTransition(string line){
+    if(line == "") return;
     int i = 0;
     string initialState, symbol, nextState;
     while(line[i] != ','){
@@ -53,19 +56,19 @@ void readTransition(string line){
     unordered_multimap<string, string> current = automata[initialState];
     current.emplace(symbol, nextState);
     automata[initialState] = current;
-
 }
-// Puts state transitions into matrix
-
 
 bool isFinal(string state) {
-    return true;
+    return finalStates.find(state) != finalStates.end() ? true : false;
 }
 
 // Checks possible transistions and recursively calls next state
-bool traverse(string word, int count, string state) {
+bool traverse(string word, int count, string state, bool &finished) {
+    cout << state << endl;
     if(count >= word.size()) {
-        return isFinal(state);
+        if(isFinal(state)) {
+            finished = true;
+        }
     }
     string symbol = word.substr(count, 1);
 
@@ -73,15 +76,21 @@ bool traverse(string word, int count, string state) {
     auto range_e = automata[state].equal_range("&");
     for (auto it = range_e.first; it != range_e.second; ++it) {
         string nextState = it->second;
-        traverse(word, count, nextState);
+        if(visitedEpsilonSets.find(nextState) != visitedEpsilonSets.end()) {
+            continue;
+        }
+        visitedEpsilonSets.emplace(state);
+        traverse(word, count, nextState, finished);
     }
 
     // Every possible transition for given state
     auto range = automata[state].equal_range(symbol);
     for (auto it = range.first; it != range.second; ++it) {
+        visitedEpsilonSets.clear();
         string nextState = it->second;
-        traverse(word, count+1, nextState);
+        traverse(word, count+1, nextState, finished);
     }
+    return finished;
 }
 
 int main() {
@@ -95,17 +104,17 @@ int main() {
         myReadFile >> secondLine;
         myReadFile >> thirdLine;
         myReadFile >> fourthLine;
-    }
-    readToMap(firstLine, 0);
-    readToMap(fourthLine, 1);
-    if(myReadFile.is_open()){
-        while(getline(myReadFile,nextLine)){
+        while(myReadFile >> nextLine){
             readTransition(nextLine);
         }
     }
-
-    if(traverse("ab", 0, "q0")) {
-        cout << "true";
+    readToMap(firstLine, 0);
+    readToMap(fourthLine, 1);
+    string word;
+    getline(cin, word);
+    bool finished = false;
+    if(traverse(word, 0, thirdLine, finished)) {
+        cout << "True!\n";
     }
     return 1;
 }
