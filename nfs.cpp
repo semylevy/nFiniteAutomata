@@ -16,14 +16,18 @@ vector<string> readToVector(string line) {
     string thing;
     while(line[i]) {
         if(line[i] == ',') {
-            myVec.push_back(thing);
+            unordered_multimap<string, string> empty;
+            automata.emplace(thing, empty);
+            //myVec.push_back(thing);
             thing = "";
             i++;
         }
         else {
             thing = thing + line[i];
             if(line[i+1] == NULL) {
-                myVec.push_back(thing);
+                unordered_multimap<string, string> empty;
+                automata.emplace(thing, empty);
+                //myVec.push_back(thing);
                 thing = "";
             }
             i++;
