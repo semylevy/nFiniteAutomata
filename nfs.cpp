@@ -73,6 +73,7 @@ bool traverse(string word, int count, string state, bool &finished, vector<strin
     visited.push_back(state);
     if(count >= word.size()) {
         if(isFinal(state)) {
+            cout << "Possible solution\n";
             printVector(visited);
             finished = true;
         }
@@ -105,7 +106,7 @@ int main() {
     string firstLine,secondLine,thirdLine,fourthLine,nextLine;
     ifstream myReadFile;
     string line;
-    myReadFile.open("text.txt");
+    myReadFile.open("text2.txt");
     if(myReadFile.is_open()){
         myReadFile >> firstLine;
         myReadFile >> secondLine;
@@ -123,6 +124,8 @@ int main() {
     bool finished = false;
     if(traverse(word, 0, thirdLine, finished, visited)) {
         cout << "True!\n";
+    } else {
+        cout << "False\n";
     }
     return 1;
 }
