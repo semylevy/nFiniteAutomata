@@ -106,7 +106,7 @@ int main() {
     string firstLine,secondLine,thirdLine,fourthLine,nextLine;
     ifstream myReadFile;
     string line;
-    myReadFile.open("text2.txt");
+    myReadFile.open("text.txt");
     if(myReadFile.is_open()){
         myReadFile >> firstLine;
         myReadFile >> secondLine;
