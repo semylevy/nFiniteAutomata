@@ -34,12 +34,11 @@ vector<string> readToVector(string line) {
 // Puts state transitions into matrix
 void fillDataMatrix() {
     // For every state in the machine
-    int states = 3;
+    int numStates = int(states.size()) ;
     int lines = 2;
-    for(int i = 0; i < states; i++) {
+    for(int i = 0; i < numStates; i++) {
         string state;
-        cout << "State\n";
-        getline(cin, state);
+        state = states[i];
         unordered_multimap<string, string> empty;
         automata.emplace(state, empty);
     }
@@ -81,7 +80,7 @@ bool traverse(string word, int count, string state) {
 
 int main() {
     //Reading Text File
-    string firstLine,secondLine,thirdLine,fourthLine;
+    string firstLine,secondLine,thirdLine,fourthLine,nextLine;
     ifstream myReadFile;
     string line;
     myReadFile.open("text.txt");
@@ -94,6 +93,9 @@ int main() {
     states = readToVector(firstLine);
     alphabet = readToVector(secondLine);
     finalStates = readToVector(fourthLine);
+    if(myReadFile.is_open()){
+        while(!myRead)
+    }
 
     fillDataMatrix();
     if(traverse("ab", 0, "q0")) {
