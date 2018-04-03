@@ -62,11 +62,18 @@ bool isFinal(string state) {
     return finalStates.find(state) != finalStates.end() ? true : false;
 }
 
+void printVector(vector<string> vec) {
+    for(int i = 0; i < vec.size(); i++) {
+        cout << vec[i] << '\n';
+    }
+}
+
 // Checks possible transistions and recursively calls next state
-bool traverse(string word, int count, string state, bool &finished) {
-    cout << state << endl;
+bool traverse(string word, int count, string state, bool &finished, vector<string> visited) {
+    visited.push_back(state);
     if(count >= word.size()) {
         if(isFinal(state)) {
+            printVector(visited);
             finished = true;
         }
     }
@@ -80,7 +87,7 @@ bool traverse(string word, int count, string state, bool &finished) {
             continue;
         }
         visitedEpsilonSets.emplace(state);
-        traverse(word, count, nextState, finished);
+        traverse(word, count, nextState, finished, visited);
     }
 
     // Every possible transition for given state
@@ -88,7 +95,7 @@ bool traverse(string word, int count, string state, bool &finished) {
     for (auto it = range.first; it != range.second; ++it) {
         visitedEpsilonSets.clear();
         string nextState = it->second;
-        traverse(word, count+1, nextState, finished);
+        traverse(word, count+1, nextState, finished, visited);
     }
     return finished;
 }
@@ -111,9 +118,10 @@ int main() {
     readToMap(firstLine, 0);
     readToMap(fourthLine, 1);
     string word;
+    vector<string> visited;
     getline(cin, word);
     bool finished = false;
-    if(traverse(word, 0, thirdLine, finished)) {
+    if(traverse(word, 0, thirdLine, finished, visited)) {
         cout << "True!\n";
     }
     return 1;
