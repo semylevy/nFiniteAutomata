@@ -2,11 +2,35 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <fstream>
 
 using namespace std;
 
 unordered_map<string, unordered_multimap<string, string> > automata;
+vector<string> states; vector<string> alphabet; string initialState; vector<string> finalStates;
 
+//Reading line string to vector
+vector<string> readToVector(string line) {
+    vector<string> myVec;
+    int i = 0;
+    string thing;
+    while(line[i]) {
+        if(line[i] == ',') {
+            myVec.push_back(thing);
+            thing = "";
+            i++;
+        }
+        else {
+            thing = thing + line[i];
+            if(line[i+1] == NULL) {
+                myVec.push_back(thing);
+                thing = "";
+            }
+            i++;
+        }
+    }
+    return myVec;
+}
 // Puts state transitions into matrix
 void fillDataMatrix() {
     // For every state in the machine
@@ -56,6 +80,21 @@ bool traverse(string word, int count, string state) {
 }
 
 int main() {
+    //Reading Text File
+    string firstLine,secondLine,thirdLine,fourthLine;
+    ifstream myReadFile;
+    string line;
+    myReadFile.open("text.txt");
+    if(myReadFile.is_open()){
+        myReadFile >> firstLine;
+        myReadFile >> secondLine;
+        myReadFile >> thirdLine;
+        myReadFile >> fourthLine;
+    }
+    states = readToVector(firstLine);
+    alphabet = readToVector(secondLine);
+    finalStates = readToVector(fourthLine);
+
     fillDataMatrix();
     if(traverse("ab", 0, "q0")) {
         cout << "true";
