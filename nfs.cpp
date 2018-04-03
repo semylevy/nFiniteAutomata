@@ -100,7 +100,7 @@ int main() {
     readToMap(fourthLine, 1);
     if(myReadFile.is_open()){
         while(getline(myReadFile,nextLine)){
-            
+            readTransition(nextLine);
         }
     }
 
