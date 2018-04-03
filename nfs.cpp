@@ -15,8 +15,8 @@ unordered_set<string> finalStates;
 void readToMap(string line, int type) {
     int i = 0;
     string current;
-    while(line[i]) {
-        if(line[i] == ',' || line[i+1] == NULL) {
+    while(line[i] || line[i-1]) {
+        if(line[i] == ',' || !line[i]) {
             if(type == 0) { // If filling out states
                 unordered_multimap<string, string> empty;
                 automata.emplace(current, empty);
