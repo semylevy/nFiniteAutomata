@@ -49,12 +49,6 @@ void fillDataMatrix() {
     // For every transition function
     for(int i = 0; i < lines; i++) {
         string initialState, symbol, nextState;
-        cout << "Initial state\n";
-        getline(cin, initialState);
-        cout << "Symbol\n";
-        getline(cin, symbol);
-        cout << "Next state\n";
-        getline(cin, nextState);
         unordered_multimap<string, string> current = automata[initialState];
         current.emplace(symbol, nextState);
         automata[initialState] = current;
