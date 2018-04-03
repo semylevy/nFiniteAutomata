@@ -68,32 +68,37 @@ bool traverse(string word, int count, string state) {
         return isFinal(state);
     }
     string symbol = word.substr(count, 1);
+
+    // Look for for epsilon
+    auto range_e = automata[state].equal_range("&");
+    for (auto it = range_e.first; it != range_e.second; ++it) {
+        string nextState = it->second;
+        traverse(word, count, nextState);
+    }
+
     // Every possible transition for given state
     auto range = automata[state].equal_range(symbol);
     for (auto it = range.first; it != range.second; ++it) {
-        cout << "traverse called on count " << count << "and wcount" << word.size() << endl;
         string nextState = it->second;
-        std::cout << it->first << ' ' << it->second << '\n';
-        return traverse(word, count+1, nextState);
+        traverse(word, count+1, nextState);
     }
-    return false;
 }
 
 int main() {
     //Reading Text File
-    string firstLine,secondLine,thirdLine,fourthLine;
-    ifstream myReadFile;
-    string line;
-    myReadFile.open("text.txt");
-    if(myReadFile.is_open()){
-        myReadFile >> firstLine;
-        myReadFile >> secondLine;
-        myReadFile >> thirdLine;
-        myReadFile >> fourthLine;
-    }
-    states = readToVector(firstLine);
-    alphabet = readToVector(secondLine);
-    finalStates = readToVector(fourthLine);
+    // string firstLine,secondLine,thirdLine,fourthLine;
+    // ifstream myReadFile;
+    // string line;
+    // myReadFile.open("text.txt");
+    // if(myReadFile.is_open()){
+    //     myReadFile >> firstLine;
+    //     myReadFile >> secondLine;
+    //     myReadFile >> thirdLine;
+    //     myReadFile >> fourthLine;
+    // }
+    // states = readToVector(firstLine);
+    // alphabet = readToVector(secondLine);
+    // finalStates = readToVector(fourthLine);
 
     fillDataMatrix();
     if(traverse("ab", 0, "q0")) {
