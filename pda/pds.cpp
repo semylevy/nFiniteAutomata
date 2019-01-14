@@ -56,6 +56,7 @@ vector<string> getMatchStates(char currentState, char terminal) {
     }
     return result;
 }
+
 bool isState(char current) {
     if(automata.find(current) != automata.end()) {
         return true;
